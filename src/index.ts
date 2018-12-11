@@ -9,7 +9,7 @@ import { Assign } from 'utility-types'
 
 interface HasId { id: string, [prop: string]: any }
 interface NullableId { id?: string }
-
+export declare interface ISetOptions { [key: string]: string }
 export class FirestoreSimple<T extends HasId> {
   public firestore: Firestore
   public collectionRef: CollectionReference
@@ -83,13 +83,13 @@ export class FirestoreSimple<T extends HasId> {
     return Object.assign({}, obj, { id: docRef.id }) as unknown as T
   }
 
-  public async set (obj: T) {
+  public async set (obj: T, setOptions?: ISetOptions) {
     if (!obj.id) throw new Error('Argument object must have "id" property')
 
     const docId = obj.id
     const setDoc = this.toDoc(obj)
 
-    await this.collectionRef.doc(docId).set(setDoc)
+    await this.collectionRef.doc(docId).set(setDoc, setOptions)
     return obj
   }
 
